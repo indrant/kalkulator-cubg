@@ -10,13 +10,10 @@
 
 
 <body>
-    <nav class="navbar navbar-dark bg-warning">
-        <span class="navbar-brand mb-0 h1"><a href="https://koperasi-cubg.org"> KSP CU Bererod Gratia</a></span>
-    </nav>
+
     <div class="container">
     <main>
         <form id="simulasiKredit">
-            <h1 class="h1 mb-3">Kalkulator Pinjaman</h1>
 
             <div class="form-group">
                 <label for="jumlahKredit">Jumlah Pinjaman: </label>
@@ -63,7 +60,7 @@
         <p>Total angsuran per bulan	: <span id="resultAngBulan"></span></p>
         <hr>
 
-        <table class="table" id="tableAngsuran">
+        <table class="table table-hover table-bordered table-sm" id="tableAngsuran">
             <thead class="thead-dark">
                 <tr>
                 <th scope="col">Bulan</th>
@@ -86,4 +83,3 @@
 <script src="assets/numeraljs/numeral.min.js"></script>
 <script src="assets/custom.js"></script>
 </html>
-
