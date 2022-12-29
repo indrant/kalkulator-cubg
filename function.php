@@ -1,10 +1,6 @@
 <?php
 header("Content-Type:application/json");
 
-include('libs/math_php/vendor/autoload.php');
-
-use MathPHP\Finance;
-
 define("HARI_BULAN", 30);
 define("HARI_TAHUN", 360);
 define("BULAN_TAHUN", 12);
@@ -13,7 +9,7 @@ if (isset($_POST['jumlahKredit']) &&
     $_POST['jangkaWaktu'] &&
     $_POST['bungaPertahun'] &&
     $_POST['metode']) {
-
+    
     $_metode = $_POST['metode'];
     $_jumlahKredit = $_POST['jumlahKredit'];
     $_jangkaWaktu = $_POST['jangkaWaktu'];
@@ -30,11 +26,6 @@ if (isset($_POST['jumlahKredit']) &&
             response($hasil, $_metode);
             break;
 
-        case 3:
-            $hasil = metode_anuitas($_jumlahKredit, $_jangkaWaktu, $_bungaPertahun);
-            response($hasil, $_metode);
-            break;
-
         default:
             response("Invalid request.");
             break;
@@ -42,9 +33,10 @@ if (isset($_POST['jumlahKredit']) &&
     
 
 } else {
-    response("Invalid request.");
-}
 
+    response("Invalid request.");
+
+}
 
 function response($data, $metode=0){
     $res['data'] = $data;
@@ -53,9 +45,8 @@ function response($data, $metode=0){
     echo $json_response;
 }
 
-
 function metode_flat($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
-    $angsuran = [];
+    $data = [];
     $sukuBunga = ($sukuBunga / 100) * $jangkaWaktu;
     $pokok = $jumlahPinjaman / $jangkaWaktu;
     $bunga = $jumlahPinjaman * $sukuBunga / $jangkaWaktu;
@@ -64,7 +55,7 @@ function metode_flat($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
 
     for($i = 0; $i < $jangkaWaktu; $i++) {
         $sisaPinjaman -= $pokok;
-        array_push($angsuran, [
+        array_push($data, [
             "no"                => $i + 1,
             "pokok"             => round($pokok),
             "bunga"             => round($bunga),
@@ -72,13 +63,12 @@ function metode_flat($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
             "sisaPinjaman"      => round($sisaPinjaman)
         ]);
     }
-    return $angsuran;
+    return $data;
 }
 
-
 function metode_efektif($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
-    $angsuran = [];
-    $sukuBunga = ($sukuBunga / 100) * 12;
+    $data = [];
+    $sukuBunga = ($sukuBunga / 100)* 12;
     $sisaPinjaman = $jumlahPinjaman;
     $pokok = $jumlahPinjaman / $jangkaWaktu;
     
@@ -86,7 +76,7 @@ function metode_efektif($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
         $bunga = $sisaPinjaman * $sukuBunga * (HARI_BULAN / HARI_TAHUN);
         $jumlahAngsuran = ( $pokok + $bunga );
         $sisaPinjaman -= $pokok;
-        array_push($angsuran, [
+        array_push($data, [
             "no"                => $i + 1,
             "pokok"             => round($pokok),
             "bunga"             => round($bunga),
@@ -94,8 +84,7 @@ function metode_efektif($jumlahPinjaman, $jangkaWaktu, $sukuBunga) {
             "sisaPinjaman"      => round($sisaPinjaman)
         ]);
     }
-    return $angsuran;
+    return $data;
 }
-
 
 ?>
